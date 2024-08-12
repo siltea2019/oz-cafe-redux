@@ -1,6 +1,10 @@
 import data from "../assets/data";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteToCart } from "../redux/redux";
 
-function Cart({ menu, cart, setCart }) {
+function Cart({ setCart }) {
+  const menu = useSelector((state) => state.menuReducer);
+  const cart = useSelector((state) => state.cartReducer);
   if (!menu)
     return (
       <div style={{ textAlign: "center", margin: "80px" }}>
@@ -20,8 +24,6 @@ function Cart({ menu, cart, setCart }) {
               item={allMenus.find((menu) => menu.id === el.id)}
               options={el.options}
               quantity={el.quantity}
-              cart={cart}
-              setCart={setCart}
             />
           ))
         ) : (
@@ -32,7 +34,9 @@ function Cart({ menu, cart, setCart }) {
   );
 }
 
-function CartItem({ item, options, quantity, cart, setCart }) {
+function CartItem({ item, options, quantity }) {
+  const dispatch = useDispatch();
+
   return (
     <li className="cart-item">
       <div className="cart-item-info">
@@ -50,7 +54,7 @@ function CartItem({ item, options, quantity, cart, setCart }) {
       <button
         className="cart-item-delete"
         onClick={() => {
-          setCart(cart.filter((el) => item.id !== el.id));
+          dispatch(deleteToCart(item.id));
         }}
       >
         삭제
